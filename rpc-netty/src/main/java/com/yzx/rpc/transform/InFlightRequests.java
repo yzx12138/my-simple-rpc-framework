@@ -1,5 +1,7 @@
 package com.yzx.rpc.transform;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
@@ -9,7 +11,7 @@ import java.util.concurrent.Semaphore;
  * @Description: 保存执行中的请求
  * @Date created on 2022/7/11
  */
-public class InFlightRequests {
+public class InFlightRequests implements Closeable {
 
     /**
      * 存储执行中的请求
@@ -27,12 +29,18 @@ public class InFlightRequests {
         // TODO 请求定时失效的逻辑
     }
 
-    public void remove(Long requestId) {
-        map.remove(requestId);
+    public ResponseFuture remove(Long requestId) {
+        ResponseFuture future = map.remove(requestId);
         semaphore.release();
+        return future;
     }
 
     public ResponseFuture get(Long requestId) {
         return map.get(requestId);
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

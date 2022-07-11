@@ -28,4 +28,8 @@ public class Header {
 
     public Header() {
     }
+
+    public int length() {
+        return Long.BYTES + Integer.BYTES + Integer.BYTES;
+    }
 }

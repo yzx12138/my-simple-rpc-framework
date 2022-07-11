@@ -2,6 +2,7 @@ package com.yzx.rpc.transform;
 
 import java.io.Closeable;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author baozi
@@ -16,5 +17,6 @@ public interface TransportClient extends Closeable {
      * @param connectionTimeout
      * @return
      */
-    Transport createTransport(SocketAddress address, long connectionTimeout);
+    Transport createTransport(SocketAddress address, long connectionTimeout)
+            throws InterruptedException, TimeoutException;
 }

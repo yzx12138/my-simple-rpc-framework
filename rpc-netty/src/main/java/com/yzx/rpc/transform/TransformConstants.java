@@ -8,4 +8,6 @@ package com.yzx.rpc.transform;
 public class TransformConstants {
 
     public static final Integer SUCCESS_CODE = 200;
+
+    public static final long DEFAULT_CONN_TIME_OUT = 30000L;
 }

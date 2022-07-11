@@ -2,6 +2,8 @@ package com.yzx.rpc.transform;
 
 import lombok.Data;
 
+import java.nio.charset.Charset;
+
 @Data
 public class ResponseHeader extends Header {
 
@@ -23,5 +25,17 @@ public class ResponseHeader extends Header {
         super(requestId, version, type);
         this.code = code;
         this.msg = msg;
+    }
+
+    public ResponseHeader() {
+        super();
+    }
+
+    @Override
+    public int length() {
+        return super.length() +
+               Integer.BYTES + // code
+               Integer.BYTES + // msg长度
+               msg == null ? 0 : msg.getBytes(Charset.defaultCharset()).length;
     }
 }
