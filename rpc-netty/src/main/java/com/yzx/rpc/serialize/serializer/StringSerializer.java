@@ -27,7 +27,7 @@ public class StringSerializer implements Serializer<String> {
     @Override
     public void serialize(String obj, byte[] bytes, int offset, int length) {
         byte[] src = obj.getBytes(Charset.defaultCharset());
-        System.arraycopy(src, 0, bytes, 1, length);
+        System.arraycopy(src, 0, bytes, offset, length);
     }
 
     @Override
