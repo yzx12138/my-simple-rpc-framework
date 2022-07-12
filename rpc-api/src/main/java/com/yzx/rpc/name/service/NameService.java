@@ -2,6 +2,7 @@ package com.yzx.rpc.name.service;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
 
 /**
  * @author baozi
@@ -24,5 +25,17 @@ public interface NameService {
      * @return
      * @throws IOException
      */
-    URI loopupService(String serviceName) throws IOException;
+    URI lookupService(String serviceName) throws IOException;
+
+    /**
+     * 支持的协议
+     * @return
+     */
+    Collection<String> supportedSchemes();
+
+    /**
+     * 连接到NameServer注册中心
+     * @param nameServiceUri
+     */
+    void connect(URI nameServiceUri);
 }

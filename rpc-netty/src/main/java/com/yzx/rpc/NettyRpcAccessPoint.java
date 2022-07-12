@@ -2,6 +2,7 @@ package com.yzx.rpc;
 
 import com.yzx.rpc.api.RpcAccessPoint;
 import com.yzx.rpc.hello.HelloService;
+import com.yzx.rpc.name.service.NameService;
 import com.yzx.rpc.proxy.RpcProxySupport;
 import com.yzx.rpc.serialize.serializer.Serializer;
 import com.yzx.rpc.spi.ServiceSupport;
@@ -10,8 +11,11 @@ import com.yzx.rpc.transform.TransformConstants;
 import com.yzx.rpc.transform.Transport;
 import com.yzx.rpc.transform.TransportClient;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
@@ -34,6 +38,7 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
     private RpcProxySupport rpcProxy = new RpcProxySupport();
 
     private TransportClient transportClient = ServiceSupport.load(TransportClient.class);
+    private Collection<NameService> nameServices = null;
 
     @Override
     public <T> URI registeService(Class<T> serviceClazz, T service) {
@@ -60,5 +65,25 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
     @Override
     public Cloneable startServer() throws Exception {
         return null;
+    }
+
+    @Override
+    public NameService getNameService(URI nameServiceUri) {
+        if (nameServices == null) {
+            nameServices = ServiceSupport.loadAll(NameService.class);
+        }
+        for (NameService nameService : nameServices) {
+            // 找到对应协议的NameService，连接并返回
+            if (nameService.supportedSchemes().contains(nameServiceUri.getScheme())) {
+                nameService.connect(nameServiceUri);
+                return nameService;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

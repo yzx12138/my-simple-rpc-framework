@@ -3,7 +3,9 @@ package com.yzx.rpc.serialize;
 import com.yzx.rpc.serialize.serializer.SerializeTypes;
 import com.yzx.rpc.serialize.serializer.Serializer;
 import com.yzx.rpc.serialize.serializer.StringSerializer;
+import com.yzx.rpc.spi.ServiceSupport;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,9 +34,11 @@ public class SerializeSupport {
     private static Map<Byte/*序列化后的类型*/, Class<?>/*序列化前的类*/> classByteMap = new HashMap<>();
 
     static {
-        Serializer<String> StringSerializer = new StringSerializer();
-        clazzSerializerMap.put(String.class, StringSerializer);
-        classByteMap.put(SerializeTypes.TYPE_STRING.getType(), String.class);
+        Collection<Serializer> serializers = ServiceSupport.loadAll(Serializer.class);
+        for (Serializer serializer : serializers) {
+            clazzSerializerMap.put(serializer.getSerializeClass(), serializer);
+            classByteMap.put(serializer.type(), serializer.getSerializeClass());
+        }
     }
 
     public static <T> byte[] serialize(T obj) {

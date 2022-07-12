@@ -1,5 +1,8 @@
 package com.yzx.rpc.api;
 
+import com.yzx.rpc.name.service.NameService;
+
+import java.io.Closeable;
 import java.net.URI;
 
 /**
@@ -7,7 +10,7 @@ import java.net.URI;
  * @Description: Rpc框架提供的api
  * @Date created on 2022/7/10
  */
-public interface RpcAccessPoint {
+public interface RpcAccessPoint extends Closeable {
 
     /**
      * 注册服务
@@ -33,4 +36,11 @@ public interface RpcAccessPoint {
      * @throws Exception
      */
     Cloneable startServer() throws Exception;
+
+    /**
+     * 获取注册中心实例
+     * @param nameServiceUri
+     * @return
+     */
+    NameService getNameService(URI nameServiceUri);
 }

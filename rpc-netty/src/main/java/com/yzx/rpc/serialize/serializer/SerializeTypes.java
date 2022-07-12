@@ -7,7 +7,8 @@ package com.yzx.rpc.serialize.serializer;
  */
 public enum SerializeTypes {
 
-    TYPE_STRING((byte) 1, String.class)
+    TYPE_STRING((byte) 1, String.class),
+    META_DATA((byte) 2, String.class)
     ;
 
     private byte type;
