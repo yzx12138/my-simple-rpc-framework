@@ -3,6 +3,7 @@ package com.yzx.rpc;
 import com.yzx.rpc.api.RpcAccessPoint;
 import com.yzx.rpc.hello.HelloService;
 import com.yzx.rpc.proxy.RpcProxySupport;
+import com.yzx.rpc.serialize.serializer.Serializer;
 import com.yzx.rpc.spi.ServiceSupport;
 import com.yzx.rpc.transform.NettyTransport;
 import com.yzx.rpc.transform.TransformConstants;
@@ -21,6 +22,13 @@ import java.util.concurrent.TimeoutException;
  * @Date created on 2022/7/11
  */
 public class NettyRpcAccessPoint implements RpcAccessPoint {
+
+    public static void main(String[] args) {
+        Serializer serializer = ServiceSupport.load(Serializer.class);
+        System.out.println(serializer.type());
+        RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class);
+        System.out.println(rpcAccessPoint);
+    }
 
     private Map<URI, Transport> transportMap = new ConcurrentHashMap<>();
     private RpcProxySupport rpcProxy = new RpcProxySupport();

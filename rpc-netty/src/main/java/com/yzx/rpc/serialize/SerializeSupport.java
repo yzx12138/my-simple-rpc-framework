@@ -24,7 +24,7 @@ public class SerializeSupport {
     /**
      * 用于确认一个类用那个序列化实现类
      */
-    private static Map<Class<?>/*待序列化的类*/, Serializer<?>/*序列化实现类*/> clazzSerializerMap;
+    private static Map<Class<?>/*待序列化的类*/, Serializer<?>/*序列化实现类*/> clazzSerializerMap = new HashMap<>();
 
     /**
      * 用于反序列化时，根据byte查询对应的类

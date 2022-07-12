@@ -13,10 +13,13 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -29,7 +32,7 @@ public class NettyClient implements TransportClient {
     private InFlightRequests inFlightRequests;
 
     private Bootstrap bootstrap;
-    private List<Channel> channels;
+    private List<Channel> channels = new LinkedList<>();
     private EventLoopGroup ioEventGroup;
 
     @Override
@@ -47,9 +50,9 @@ public class NettyClient implements TransportClient {
         }
         Channel channel = future.channel();
         channels.add(channel);
-        if (channel == null || !channel.isActive()) {
-            throw new IllegalStateException();
-        }
+        //if (channel == null || !channel.isActive()) {
+        //    throw new IllegalStateException();
+        //}
         return new NettyTransport(inFlightRequests, channel);
     }
 
@@ -59,6 +62,7 @@ public class NettyClient implements TransportClient {
             ioEventGroup = new NioEventLoopGroup();
         }
         bootstrap.group(ioEventGroup)
+                .channel(NioSocketChannel.class)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .handler(new ChannelInitializer<SocketChannel>() {
 
