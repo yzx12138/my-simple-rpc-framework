@@ -1,2 +1,3 @@
 com.yzx.rpc.serialize.serializer.StringSerializer
 com.yzx.rpc.serialize.serializer.MetaDataSerializer
+com.yzx.rpc.serialize.serializer.RpcRequestSerializer

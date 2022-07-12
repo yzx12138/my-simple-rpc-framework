@@ -1,21 +1,20 @@
 package com.yzx.rpc;
 
 import com.yzx.rpc.api.RpcAccessPoint;
-import com.yzx.rpc.hello.HelloService;
 import com.yzx.rpc.name.service.NameService;
 import com.yzx.rpc.proxy.RpcProxySupport;
-import com.yzx.rpc.serialize.serializer.Serializer;
+import com.yzx.rpc.server.ServiceProviderRegistry;
 import com.yzx.rpc.spi.ServiceSupport;
-import com.yzx.rpc.transform.NettyTransport;
 import com.yzx.rpc.transform.TransformConstants;
 import com.yzx.rpc.transform.Transport;
 import com.yzx.rpc.transform.TransportClient;
+import com.yzx.rpc.transform.TransportServer;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
@@ -27,22 +26,25 @@ import java.util.concurrent.TimeoutException;
  */
 public class NettyRpcAccessPoint implements RpcAccessPoint {
 
-    public static void main(String[] args) {
-        Serializer serializer = ServiceSupport.load(Serializer.class);
-        System.out.println(serializer.type());
-        RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class);
-        System.out.println(rpcAccessPoint);
-    }
-
     private Map<URI, Transport> transportMap = new ConcurrentHashMap<>();
     private RpcProxySupport rpcProxy = new RpcProxySupport();
 
-    private TransportClient transportClient = ServiceSupport.load(TransportClient.class);
+    private TransportClient transportClient = null;
+    private TransportServer transportServer = null;
     private Collection<NameService> nameServices = null;
+    private ServiceProviderRegistry serviceProviderRegistry = null;
+
+    private final String host = "localhost";
+    private final int port = 9999;
+    private final URI uri = URI.create("rpc://" + host + ":" + port);
 
     @Override
     public <T> URI registeService(Class<T> serviceClazz, T service) {
-        return null;
+        if (serviceProviderRegistry == null) {
+            serviceProviderRegistry = ServiceSupport.load(ServiceProviderRegistry.class);
+        }
+        serviceProviderRegistry.addServiceProvider(serviceClazz, service);
+        return uri;
     }
 
     @Override
@@ -53,6 +55,9 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
     }
 
     private <T> Transport createTransport(URI uri) {
+        if (transportClient == null) {
+            transportClient = ServiceSupport.load(TransportClient.class);
+        }
         try {
             return transportClient.createTransport(
                     new InetSocketAddress(uri.getHost(), uri.getPort()),
@@ -63,8 +68,17 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
     }
 
     @Override
-    public Cloneable startServer() throws Exception {
-        return null;
+    public synchronized Closeable startServer() throws Exception {
+        if (transportServer == null) {
+            transportServer = ServiceSupport.load(TransportServer.class);
+            transportServer.startServer(port);
+        }
+
+        return () -> {
+            if (transportServer != null) {
+                transportServer.close();
+            }
+        };
     }
 
     @Override
@@ -84,6 +98,11 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
 
     @Override
     public void close() throws IOException {
-
+        if (transportClient != null) {
+            transportClient.close();
+        }
+        if (transportServer != null) {
+            transportServer.close();
+        }
     }
 }

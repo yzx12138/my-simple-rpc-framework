@@ -50,9 +50,9 @@ public class NettyClient implements TransportClient {
         }
         Channel channel = future.channel();
         channels.add(channel);
-        //if (channel == null || !channel.isActive()) {
-        //    throw new IllegalStateException();
-        //}
+        if (channel == null || !channel.isActive()) {
+            throw new IllegalStateException();
+        }
         return new NettyTransport(inFlightRequests, channel);
     }
 

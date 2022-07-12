@@ -60,7 +60,7 @@ public class RpcProxySupport implements InvocationHandler {
         Command request = new Command();
         Header header = new Header(RequestIdSupport.next(), 1, ServiceTypes.TYPE_RPC_REQUEST);
         request.setHeader(header);
-        request.setPayload(rpcRequest.getSerializedArguments());
+        request.setPayload(SerializeSupport.serialize(rpcRequest));
         try {
             CompletableFuture<Command> completableFuture = transport.send(request);
             Command responseCommand = completableFuture.get();

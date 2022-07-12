@@ -35,7 +35,7 @@ public interface RpcAccessPoint extends Closeable {
      * @return
      * @throws Exception
      */
-    Cloneable startServer() throws Exception;
+    Closeable startServer() throws Exception;
 
     /**
      * 获取注册中心实例

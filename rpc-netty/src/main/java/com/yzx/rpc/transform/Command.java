@@ -20,4 +20,24 @@ public class Command {
      */
     private byte[] payload;
 
+    public static Command buildFailCommand(Command request, String msg) {
+        Command failCommand = new Command();
+        ResponseHeader responseHeader = new ResponseHeader();
+        responseHeader.setRequestId(request.getHeader().getRequestId());
+        responseHeader.setType(request.getHeader().getType());
+        responseHeader.setVersion(request.getHeader().getVersion());
+        responseHeader.setCode(TransformConstants.ERROR_CODE);
+        responseHeader.setMsg(msg);
+        return failCommand;
+    }
+
+    public static Command buildSuccessCommand(Command request) {
+        Command failCommand = new Command();
+        ResponseHeader responseHeader = new ResponseHeader();
+        responseHeader.setRequestId(request.getHeader().getRequestId());
+        responseHeader.setType(request.getHeader().getType());
+        responseHeader.setVersion(request.getHeader().getVersion());
+        responseHeader.setCode(TransformConstants.SUCCESS_CODE);
+        return failCommand;
+    }
 }
