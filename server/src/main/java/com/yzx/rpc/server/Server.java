@@ -4,6 +4,8 @@ import com.yzx.rpc.api.RpcAccessPoint;
 import com.yzx.rpc.hello.HelloService;
 import com.yzx.rpc.name.service.NameService;
 import com.yzx.rpc.spi.ServiceSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
@@ -15,6 +17,8 @@ import java.net.URI;
  */
 public class Server {
 
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
+
     public static void main(String[] args) throws Exception {
         String serviceName = HelloService.class.getCanonicalName();
         HelloService helloService = new HelloServiceImpl();
@@ -25,7 +29,7 @@ public class Server {
         try (RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class)) {
             // 启动服务端
             rpcAccessPoint.startServer();
-            System.out.println("server started");
+            logger.info("server started");
             // 注册服务到NameServer
             URI uri = rpcAccessPoint.registeService(HelloService.class, helloService);
             if (uri == null) {
@@ -33,11 +37,11 @@ public class Server {
             }
             NameService nameService = rpcAccessPoint.getNameService(nameServiceUri);
             nameService.registerService(serviceName, uri);
-            System.out.println("server register ok");
+            logger.info("server register ok");
 
 
             System.in.read();
-            System.out.println("Bye ~");
+            logger.info("Bye ~");
         }
     }
 }

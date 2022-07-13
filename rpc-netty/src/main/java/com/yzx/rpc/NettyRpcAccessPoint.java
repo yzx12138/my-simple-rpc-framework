@@ -35,7 +35,7 @@ public class NettyRpcAccessPoint implements RpcAccessPoint {
     private ServiceProviderRegistry serviceProviderRegistry = null;
 
     private final String host = "localhost";
-    private final int port = 9999;
+    private final int port = 9998;
     private final URI uri = URI.create("rpc://" + host + ":" + port);
 
     @Override

@@ -4,6 +4,8 @@ import com.yzx.rpc.api.RpcAccessPoint;
 import com.yzx.rpc.hello.HelloService;
 import com.yzx.rpc.name.service.NameService;
 import com.yzx.rpc.spi.ServiceSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.net.URI;
  * @Date created on 2022/7/10
  */
 public class Client {
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     public static void main(String[] args) throws IOException {
         String serviceName = HelloService.class.getCanonicalName();
@@ -24,17 +27,18 @@ public class Client {
         try (RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class)) {
             NameService nameService = rpcAccessPoint.getNameService(file.toURI());
             if (nameService == null) {
-                System.out.println("name service don't exist");
+                logger.warn("name service don't exist");
                 return;
             }
             URI uri = nameService.lookupService(serviceName);
             if (uri == null) {
-                System.out.println("service uri don't exist");
+                logger.warn("service uri don't exist");
                 return;
             }
             HelloService helloService = rpcAccessPoint.getRemoteService(uri, HelloService.class);
             String name = helloService.hello("name");
             System.out.println(name);
+            logger.info("client end~");
         }
     }
 }

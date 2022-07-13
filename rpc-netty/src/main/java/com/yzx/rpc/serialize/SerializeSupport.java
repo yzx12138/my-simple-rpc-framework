@@ -16,13 +16,6 @@ import java.util.Map;
  */
 public class SerializeSupport {
 
-    public static void main(String[] args) {
-        String testSrl = "Test测试ceshi。。。，，，...,,,";
-        byte[] serializeBytes = SerializeSupport.serialize(testSrl);
-        String parse = SerializeSupport.parse(serializeBytes);
-        System.out.println(testSrl.equals(parse));
-    }
-
     /**
      * 用于确认一个类用那个序列化实现类
      */

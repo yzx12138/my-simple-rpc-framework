@@ -24,6 +24,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.yzx.rpc</groupId>
             <artifactId>rpc-netty</artifactId>
             <version>1.0-SNAPSHOT</version>

@@ -7,6 +7,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author baozi
@@ -16,6 +18,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @ChannelHandler.Sharable
 public class RequestInvocation extends SimpleChannelInboundHandler<Command> {
 
+    private static final Logger logger = LoggerFactory.getLogger(RequestInvocation.class);
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Command request) throws Exception {
         // 根据协议类型来选择不同的handler处理逻辑
@@ -23,7 +27,7 @@ public class RequestInvocation extends SimpleChannelInboundHandler<Command> {
         Command response;
         if (handler == null) {
             response = Command.buildFailCommand(request, "msg type handler not exist");
-            System.out.printf("no hanlder for msg type: %d", request.getHeader().getType());
+            logger.warn("[RequestInvocation - channelRead0] no hanlder for msg type: %d", request.getHeader().getType());
         } else {
             response = handler.handle(request);
         }

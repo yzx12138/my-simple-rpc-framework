@@ -10,12 +10,6 @@ import java.util.concurrent.atomic.LongAdder;
 public class RequestIdSupport {
     private final static LongAdder adder = new LongAdder();
 
-    public static void main(String[] args) {
-        System.out.println(adder.longValue());
-        adder.increment();
-        System.out.println(adder.longValue());
-    }
-
     public static long next() {
         adder.increment();
         return adder.longValue();
