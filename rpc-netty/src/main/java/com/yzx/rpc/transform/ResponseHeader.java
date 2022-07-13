@@ -36,6 +36,6 @@ public class ResponseHeader extends Header {
         return super.length() +
                Integer.BYTES + // code
                Integer.BYTES + // msg长度
-               msg == null ? 0 : msg.getBytes(Charset.defaultCharset()).length;
+               (msg == null ? 0 : msg.getBytes(Charset.defaultCharset()).length);
     }
 }

@@ -28,16 +28,18 @@ public class Command {
         responseHeader.setVersion(request.getHeader().getVersion());
         responseHeader.setCode(TransformConstants.ERROR_CODE);
         responseHeader.setMsg(msg);
+        failCommand.setHeader(responseHeader);
         return failCommand;
     }
 
     public static Command buildSuccessCommand(Command request) {
-        Command failCommand = new Command();
+        Command command = new Command();
         ResponseHeader responseHeader = new ResponseHeader();
         responseHeader.setRequestId(request.getHeader().getRequestId());
         responseHeader.setType(request.getHeader().getType());
         responseHeader.setVersion(request.getHeader().getVersion());
         responseHeader.setCode(TransformConstants.SUCCESS_CODE);
-        return failCommand;
+        command.setHeader(responseHeader);
+        return command;
     }
 }

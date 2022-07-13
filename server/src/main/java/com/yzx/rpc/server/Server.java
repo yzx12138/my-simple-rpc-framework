@@ -25,6 +25,7 @@ public class Server {
         try (RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class)) {
             // 启动服务端
             rpcAccessPoint.startServer();
+            System.out.println("server started");
             // 注册服务到NameServer
             URI uri = rpcAccessPoint.registeService(HelloService.class, helloService);
             if (uri == null) {
@@ -32,6 +33,8 @@ public class Server {
             }
             NameService nameService = rpcAccessPoint.getNameService(nameServiceUri);
             nameService.registerService(serviceName, uri);
+            System.out.println("server register ok");
+
 
             System.in.read();
             System.out.println("Bye ~");

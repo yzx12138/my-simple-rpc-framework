@@ -29,7 +29,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class NettyClient implements TransportClient {
 
-    private InFlightRequests inFlightRequests;
+    private InFlightRequests inFlightRequests = new InFlightRequests();
 
     private Bootstrap bootstrap;
     private List<Channel> channels = new LinkedList<>();
@@ -49,10 +49,10 @@ public class NettyClient implements TransportClient {
             throw new TimeoutException("connect host time out");
         }
         Channel channel = future.channel();
-        channels.add(channel);
         if (channel == null || !channel.isActive()) {
             throw new IllegalStateException();
         }
+        channels.add(channel);
         return new NettyTransport(inFlightRequests, channel);
     }
 
@@ -63,7 +63,6 @@ public class NettyClient implements TransportClient {
         }
         bootstrap.group(ioEventGroup)
                 .channel(NioSocketChannel.class)
-                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .handler(new ChannelInitializer<SocketChannel>() {
 
                     @Override
@@ -72,7 +71,8 @@ public class NettyClient implements TransportClient {
                         socketChannel.pipeline().addLast(new RequestEncoder());
                         socketChannel.pipeline().addLast(new NettyClientHandler(inFlightRequests));
                     }
-                });
+                })
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
         return bootstrap;
     }
@@ -80,7 +80,7 @@ public class NettyClient implements TransportClient {
     @Override
     public void close() throws IOException {
         for (Channel channel : channels) {
-            if (channel != null) {
+            if (channel != null && channel.isActive()) {
                 channel.close();
             }
         }

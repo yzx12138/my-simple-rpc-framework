@@ -9,7 +9,6 @@ import io.netty.channel.ChannelHandler;
  * @Description: RequestEncoder
  * @Date created on 2022/7/12
  */
-@ChannelHandler.Sharable
 public class RequestEncoder extends CommandEncoder {
 
     @Override

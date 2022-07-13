@@ -10,7 +10,6 @@ import io.netty.channel.ChannelHandler;
  * @Description: Request解码
  * @Date created on 2022/7/12
  */
-@ChannelHandler.Sharable
 public class RequestDecoder extends CommandDecoder {
 
     @Override

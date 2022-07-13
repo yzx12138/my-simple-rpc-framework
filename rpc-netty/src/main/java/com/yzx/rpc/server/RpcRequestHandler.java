@@ -2,6 +2,7 @@ package com.yzx.rpc.server;
 
 import com.yzx.rpc.client.ServiceTypes;
 import com.yzx.rpc.serialize.SerializeSupport;
+import com.yzx.rpc.spi.Singleton;
 import com.yzx.rpc.transform.Command;
 import com.yzx.rpc.transform.RpcRequest;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Description: Rpc请求处理器
  * @Date created on 2022/7/13
  */
+@Singleton
 public class RpcRequestHandler implements RequestHandler, ServiceProviderRegistry {
 
     private Map<String/*serviceName*/, Object/*serviceProvider*/> serviceProviders = new ConcurrentHashMap();
