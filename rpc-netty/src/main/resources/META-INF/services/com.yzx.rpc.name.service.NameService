@@ -1,1 +1,2 @@
 com.yzx.rpc.name.service.LocalFileNameService
+com.yzx.rpc.name.service.JDBCNameService

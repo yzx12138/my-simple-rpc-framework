@@ -21,11 +21,11 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         String serviceName = HelloService.class.getCanonicalName();
-        File tmpDirFile = new File(System.getProperty("java.io.tmpdir"));
-        File file = new File(tmpDirFile, "my_simple_rpc_name_service.data");
+        URI nameServiceUri = getJDBCNameServiceURI();
+        //URI nameServiceUri = getFileNameServiceURI();
 
         try (RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class)) {
-            NameService nameService = rpcAccessPoint.getNameService(file.toURI());
+            NameService nameService = rpcAccessPoint.getNameService(nameServiceUri);
             if (nameService == null) {
                 logger.warn("name service don't exist");
                 return;
@@ -40,5 +40,16 @@ public class Client {
             System.out.println(name);
             logger.info("client end~");
         }
+    }
+
+    private static URI getJDBCNameServiceURI() throws IOException {
+        String uri = "jdbc:mysql://localhost:3306/test";
+        return URI.create(uri);
+    }
+
+    private static URI getFileNameServiceURI() throws IOException {
+        File tmpDirFile = new File(System.getProperty("java.io.tmpdir"));
+        File file = new File(tmpDirFile, "my_simple_rpc_name_service.data");
+        return file.toURI();
     }
 }

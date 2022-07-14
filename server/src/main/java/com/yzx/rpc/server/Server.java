@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -22,9 +23,8 @@ public class Server {
     public static void main(String[] args) throws Exception {
         String serviceName = HelloService.class.getCanonicalName();
         HelloService helloService = new HelloServiceImpl();
-        File tmpDirFile = new File(System.getProperty("java.io.tmpdir"));
-        File file = new File(tmpDirFile, "my_simple_rpc_name_service.data");
-        URI nameServiceUri = file.toURI();
+        URI nameServiceUri = getJDBCNameServiceURI();
+        //URI nameServiceUri = getFileNameServiceURI();
 
         try (RpcAccessPoint rpcAccessPoint = ServiceSupport.load(RpcAccessPoint.class)) {
             // 启动服务端
@@ -43,5 +43,16 @@ public class Server {
             System.in.read();
             logger.info("Bye ~");
         }
+    }
+
+    private static URI getJDBCNameServiceURI() throws IOException {
+        String uri = "jdbc:mysql://localhost:3306/test";
+        return URI.create(uri);
+    }
+
+    private static URI getFileNameServiceURI() throws IOException {
+        File tmpDirFile = new File(System.getProperty("java.io.tmpdir"));
+        File file = new File(tmpDirFile, "my_simple_rpc_name_service.data");
+        return file.toURI();
     }
 }

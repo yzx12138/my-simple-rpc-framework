@@ -9,7 +9,8 @@ import java.util.Objects;
  */
 public enum NameServiceSchemes {
 
-    FILE(1, "file")
+    FILE(1, "file"),
+    JDBC(2, "jdbc"),
     ;
 
     private Integer code;

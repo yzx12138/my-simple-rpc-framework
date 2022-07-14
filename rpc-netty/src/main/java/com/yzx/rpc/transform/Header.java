@@ -17,6 +17,7 @@ public class Header {
 
     /**
      * 标识请求类型，以路由到具体的处理类中去
+     * @see com.yzx.rpc.client.ServiceTypes
      */
     private Integer type;
 
