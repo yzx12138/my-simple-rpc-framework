@@ -18,13 +18,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class RpcRequestHandler implements RequestHandler, ServiceProviderRegistry {
 
-    private Map<String/*serviceName*/, Object/*serviceProvider*/> serviceProviders = new ConcurrentHashMap();
+    private final Map<String/*serviceName*/, Object/*serviceProvider*/> serviceProviders = new ConcurrentHashMap();
 
     @Override
     public Integer getType() {
         return ServiceTypes.TYPE_RPC_REQUEST;
     }
 
+    /**
+     * 处理远程请求的方法
+     * 1.根据类名路由到具体的实现类
+     * 2.通过反射，调用实际的实现类逻辑
+     * 3.返回结果
+     */
     @Override
     public Command handle(Command request) {
         byte[] payload = request.getPayload();
